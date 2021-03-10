@@ -1,0 +1,27 @@
+﻿@model Peliculas.Models.Pelicula
+
+@{
+    ViewBag.Title = "Editar Pelicula";
+}
+
+<h2>Editar Pelicula</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="container">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Id)
+
+    @{
+        Html.RenderPartial("_Pelicula");
+    }
+</div>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

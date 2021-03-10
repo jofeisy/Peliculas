@@ -1,0 +1,127 @@
+﻿@model IEnumerable<Peliculas.Models.Categoria>
+
+@{
+    ViewBag.Title = "Categorías";
+}
+
+<!--Datatable-->
+<link href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap.min.css" rel="Stylesheet" type="text/css" />
+<link href="https://cdn.datatables.net/responsive/2.2.6/css/responsive.dataTables.min.css" rel="Stylesheet" type="text/css" />
+<link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="Stylesheet" type="text/css" />
+<!------------->
+
+<!-- Alertify Bootstrap theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css" />
+<!------------->
+
+<h2></h2>
+<div class="row">
+    <div class="col-xs-12 col-md-12 col-lg-12">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="text-success" style="padding: 0px; margin: 0px">Lista de Categorías</h3>
+            </div>
+            <div class="panel-body">
+                <a href="@Url.Action("Crear", "Categorias")" class="btn btn-primary">Crear Nueva</a>
+                <hr />
+                <table id="tblCategoria" class="table table-hover display responsive table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Descripción</th>
+                            <th>Peliculas</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Descripcion)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalPeliculas)
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Editar", "Categorias", new { id = item.Id })" class="btn btn-warning btn-sm" title="Editar">
+                                    <i class="glyphicon glyphicon-pencil"></i>
+                                </a>
+                                <button class="btn btn-danger btn-sm" type="button" title="Eliminar" onclick="ConfirmacionEliminar(@item.Id)">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </button>
+                                <a href="@Url.Action("Detalles", "Categorias", new { id = item.Id })" class="btn btn-info btn-sm" title="Detalles">
+                                    <i class="glyphicon glyphicon-align-justify"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.6/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#tblCategoria').DataTable({
+                responsive: true,
+                order: [[0, 'asc']],
+                columnDefs: [
+                    { orderable: false, targets: 0 },
+                ],
+
+                "lengthChange": false,
+                "language": {
+                    "info": "Registros: _TOTAL_",
+                    "infoFiltered": " (filtrado de un total de _MAX_)",
+                    "search": "Buscar",
+                    "emptyTable": "Noy hay registros para mostrar",
+                    "infoEmpty": "Registros: 0",
+                    "loadingRecords": "&nbsp;",
+                    "processing": "Cargando..."
+                }
+            });
+        });
+
+        function ConfirmacionEliminar(Id) {
+            alertify.defaults.transition = "slide";
+            alertify.defaults.theme.ok = "btn btn-primary";
+            alertify.defaults.theme.cancel = "btn btn-danger";
+
+            alertify.confirm('Eliminar', 'Confirme que desea eliminar este registro',
+                function () {
+                    Delete(Id);
+                },
+                function () {
+                    //alertify.error('Cancel')
+                });
+        }
+
+        function Delete(Id) {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Delete")',
+                dataType: 'json',
+                data: { id: Id },
+                success: function (result) {
+                    alertify.success(result, 3, function () { window.location.reload(); });
+                }
+            });
+        }
+
+    </script>
+}

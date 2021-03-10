@@ -1,0 +1,55 @@
+﻿@model Peliculas.Models.Categoria
+
+@{
+    ViewBag.Title = "Detalles";
+}
+
+<h2>Detalles</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Categoría
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descripcion)
+        </dd>
+
+    </dl>
+    <hr />
+</div>
+
+<h3>Películas</h3>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <table class="table table-hover display responsive table-striped" style="width:60%">
+            <thead>
+                <tr>
+                    <th>Titulo</th>
+                    <th>Director</th>
+                    <th>Fecha Publicación</th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model.Peliculas)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Titulo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Director)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FechaPublicacion)
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>  
+</div>
+<hr />
+@Html.ActionLink("Volver", "Listar", "Categorias", new { }, new { @class = "btn btn-success" })
